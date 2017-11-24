@@ -21,11 +21,11 @@ task appVeyor -depends Clean, CreateNuGetPackage
 task Clean {
 	rmdir $output_directory -ea SilentlyContinue -recurse
 	rmdir $dist_directory -ea SilentlyContinue -recurse
-	exec { msbuild /nologo /verbosity:quiet $sln_file /p:Configuration=$target_config /t:Clean }
+	exec { dotnet clean $sln_file --configuration=$target_config }
 }
 
 task Compile -depends UpdateVersion {
-	exec { msbuild /nologo /verbosity:q $sln_file /p:Configuration=$target_config /p:TargetFrameworkVersion=v4.5 }
+	exec { dotnet build $sln_file --configuration=$target_config }
 }
 
 task UpdateVersion {
