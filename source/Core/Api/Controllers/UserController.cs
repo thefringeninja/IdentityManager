@@ -74,7 +74,7 @@ namespace IdentityManager.Api.Models.Controllers
             if (result.IsSuccess)
             {
                 var meta = await GetMetadataAsync();
-                var resource = new UserQueryResultResource(result.Result, Url, meta.UserMetadata);
+                var resource = new UserQueryResultResource(result.Result, meta.UserMetadata);
                 return Ok(resource);
             }
 
@@ -101,7 +101,7 @@ namespace IdentityManager.Api.Models.Controllers
                 var result = await this.idmService.CreateUserAsync(properties);
                 if (result.IsSuccess)
                 {
-                    var url = Url.Link(Constants.RouteNames.GetUser, new { subject = result.Result.Subject });
+                    var url = LinkFormatter.User(result.Result.Subject);
                     var resource = new 
                     {
                         Data = new { subject = result.Result.Subject },
@@ -151,7 +151,7 @@ namespace IdentityManager.Api.Models.Controllers
                     roles = roleResult.Result.Items.ToArray();
                 }
 
-                return Ok(new UserDetailResource(result.Result, Url, meta, roles));
+                return Ok(new UserDetailResource(result.Result, meta, roles));
             }
 
             return BadRequest(result.ToError());

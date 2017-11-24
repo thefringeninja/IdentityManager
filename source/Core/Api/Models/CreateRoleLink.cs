@@ -15,15 +15,14 @@
  */
  
 using System.Collections.Generic;
-using System.Web.Http.Routing;
 
 namespace IdentityManager.Api.Models
 {
     public class CreateRoleLink : Dictionary<string, object>
     {
-        public CreateRoleLink(UrlHelper url, RoleMetadata roleMetadata)
+        public CreateRoleLink(RoleMetadata roleMetadata)
         {
-            this["href"] = url.Link(Constants.RouteNames.CreateRole, null);
+            this["href"] = LinkFormatter.Roles();
             this["meta"] = roleMetadata.GetCreateProperties();
         }
     }

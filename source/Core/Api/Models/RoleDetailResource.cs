@@ -17,25 +17,23 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web.Http.Routing;
 using IdentityManager.Extensions;
 
 namespace IdentityManager.Api.Models
 {
     public class RoleDetailResource
     {
-        public RoleDetailResource(RoleDetail role, UrlHelper url, RoleMetadata meta)
+        public RoleDetailResource(RoleDetail role, RoleMetadata meta)
         {
             if (role == null) throw new ArgumentNullException("role");
-            if (url == null) throw new ArgumentNullException("url");
             if (meta == null) throw new ArgumentNullException("meta");
 
-            Data = new RoleDetailDataResource(role, url, meta);
+            Data = new RoleDetailDataResource(role, meta);
 
             var links = new Dictionary<string, string>();
             if (meta.SupportsDelete)
             {
-                links["Delete"] = url.Link(Constants.RouteNames.DeleteRole, new { subject = role.Subject });
+                links["Delete"] = LinkFormatter.Role(role.Subject);
             }
             this.Links = links;
         }
@@ -46,10 +44,9 @@ namespace IdentityManager.Api.Models
 
     public class RoleDetailDataResource : Dictionary<string, object>
     {
-        public RoleDetailDataResource(RoleDetail role, UrlHelper url, RoleMetadata meta)
+        public RoleDetailDataResource(RoleDetail role, RoleMetadata meta)
         {
             if (role == null) throw new ArgumentNullException("role");
-            if (url == null) throw new ArgumentNullException("url");
             if (meta == null) throw new ArgumentNullException("meta");
 
             this["Name"] = role.Name;
@@ -67,11 +64,7 @@ namespace IdentityManager.Api.Models
                         Meta = m,
                         Links = new
                         {
-                            update = url.Link(Constants.RouteNames.UpdateRoleProperty, 
-                                new { 
-                                    subject = role.Subject, 
-                                    type = p.Type.ToBase64UrlEncoded()
-                                })
+                            update = LinkFormatter.RoleProperty(role.Subject, p.Type)
                         }
                     };
                 

@@ -79,7 +79,7 @@ namespace IdentityManager.Api.Models.Controllers
             var result = await idmService.QueryRolesAsync(filter, start, count);
             if (result.IsSuccess)
             {
-                var resource = new RoleQueryResultResource(result.Result, Url, meta.RoleMetadata);
+                var resource = new RoleQueryResultResource(result.Result, meta.RoleMetadata);
                 return Ok(resource);
             }
 
@@ -106,7 +106,7 @@ namespace IdentityManager.Api.Models.Controllers
                 var result = await this.idmService.CreateRoleAsync(properties);
                 if (result.IsSuccess)
                 {
-                    var url = Url.Link(Constants.RouteNames.GetRole, new { subject = result.Result.Subject });
+                    var url = LinkFormatter.Role(result.Result.Subject);
                     var resource = new
                     {
                         Data = new { subject = result.Result.Subject },
@@ -138,7 +138,7 @@ namespace IdentityManager.Api.Models.Controllers
                     return NotFound();
                 }
 
-                return Ok(new RoleDetailResource(result.Result, Url, meta.RoleMetadata));
+                return Ok(new RoleDetailResource(result.Result, meta.RoleMetadata));
             }
 
             return BadRequest(result.ToError());

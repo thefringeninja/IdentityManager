@@ -47,7 +47,7 @@ namespace IdentityManager.Api.Controllers
         public IHttpActionResult Logout()
         {
             idmConfig.SecurityConfiguration.SignOut(Request.GetOwinContext());
-            return RedirectToRoute(Constants.RouteNames.Home, null);
+            return Redirect(new Uri("./", UriKind.Relative));
         }
     }
 }

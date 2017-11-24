@@ -15,15 +15,14 @@
  */
  
 using System.Collections.Generic;
-using System.Web.Http.Routing;
 
 namespace IdentityManager.Api.Models
 {
     public class CreateUserLink : Dictionary<string, object>
     {
-        public CreateUserLink(UrlHelper url, UserMetadata userMetadata)
+        public CreateUserLink(UserMetadata userMetadata)
         {
-            this["href"] = url.Link(Constants.RouteNames.CreateUser, null);
+            this["href"] = LinkFormatter.Users();
             this["meta"] = userMetadata.GetCreateProperties();
         }
     }

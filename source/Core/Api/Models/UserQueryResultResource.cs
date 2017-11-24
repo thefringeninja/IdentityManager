@@ -16,24 +16,22 @@
  
 using System;
 using System.Collections.Generic;
-using System.Web.Http.Routing;
 
 namespace IdentityManager.Api.Models
 {
     public class UserQueryResultResource
     {
-        public UserQueryResultResource(QueryResult<UserSummary> result, UrlHelper url, UserMetadata meta)
+        public UserQueryResultResource(QueryResult<UserSummary> result, UserMetadata meta)
         {
             if (result == null) throw new ArgumentNullException("result");
-            if (url == null) throw new ArgumentNullException("url");
             if (meta == null) throw new ArgumentNullException("meta");
 
-            Data = new UserQueryResultResourceData(result, url, meta);
+            Data = new UserQueryResultResourceData(result, meta);
             
             var links = new Dictionary<string, object>();
             if (meta.SupportsCreate)
             {
-                links["create"] = new CreateUserLink(url, meta);
+                links["create"] = new CreateUserLink(meta);
             };
             Links = links;
         }
@@ -52,10 +50,9 @@ namespace IdentityManager.Api.Models
                 .ForMember(x => x.Data, opts => opts.MapFrom(x => x));
         }
 
-        public UserQueryResultResourceData(QueryResult<UserSummary> result, UrlHelper url, UserMetadata meta)
+        public UserQueryResultResourceData(QueryResult<UserSummary> result, UserMetadata meta)
         {
             if (result == null) throw new ArgumentNullException("result");
-            if (url == null) throw new ArgumentNullException("url");
             if (meta == null) throw new ArgumentNullException("meta");
 
             AutoMapper.Mapper.Map(result, this);
@@ -63,11 +60,11 @@ namespace IdentityManager.Api.Models
             foreach (var user in this.Items)
             {
                 var links = new Dictionary<string, string> {
-                    {"Detail", url.Link(Constants.RouteNames.GetUser, new { subject = user.Data.Subject })}
+                    {"Detail", LinkFormatter.User(user.Data.Subject)}
                 };
                 if (meta.SupportsDelete)
                 {
-                    links.Add("delete", url.Link(Constants.RouteNames.DeleteUser, new { subject = user.Data.Subject }));
+                    links.Add("delete", LinkFormatter.User(user.Data.Subject));
                 }
                 user.Links = links;
             }

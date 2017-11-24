@@ -66,18 +66,18 @@ namespace IdentityManager.Api.Models.Controllers
             });
 
             var links = new Dictionary<string, object>();
-            links["users"] = Url.Link(Constants.RouteNames.GetUsers, null);
+            links["users"] = LinkFormatter.Users();
             if (meta.RoleMetadata.SupportsListing)
             {
-                links["roles"] = Url.Link(Constants.RouteNames.GetRoles, null);
+                links["roles"] = LinkFormatter.Roles();
             }
             if (meta.UserMetadata.SupportsCreate)
             {
-                links["createUser"] = new CreateUserLink(Url, meta.UserMetadata);
+                links["createUser"] = new CreateUserLink(meta.UserMetadata);
             }
             if (meta.RoleMetadata.SupportsCreate)
             {
-                links["createRole"] = new CreateRoleLink(Url, meta.RoleMetadata);
+                links["createRole"] = new CreateRoleLink(meta.RoleMetadata);
             }
 
             return Ok(new 
